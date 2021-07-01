@@ -1,3 +1,4 @@
+#include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <WebSocketClient.h>
 #include <ESP8266WiFi.h>
@@ -19,6 +20,7 @@ WebSocketClient webSocketClient;
 
 #define DHTTYPE DHT11
 uint8_t DHTPin = D2;
+
 
 DHT dht(DHTPin,DHTTYPE);
 
