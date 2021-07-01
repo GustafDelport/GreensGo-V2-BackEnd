@@ -1,8 +1,13 @@
+#include <DHT.h>
 #include <WebSocketClient.h>
 #include <ESP8266WiFi.h>
 
 boolean handshakeFailed=0;
+
 String data= "";
+float temp;
+float humd;
+
 char path[] = "/NodeOne";
 const char* ssid     = "Delport-WiFi 2.4GHz";
 const char* password = "Adp!001G";
@@ -12,15 +17,16 @@ const int espport= 3000;
   
 WebSocketClient webSocketClient;
 
-unsigned long previousMillis = 0;
-unsigned long currentMillis;
-unsigned long interval=10000;
+#define DHTTYPE DHT11
+uint8_t DHTPin = D2;
+
+DHT dht(DHTPin,DHTTYPE);
 
 WiFiClient client;
 
 void setup() {
   Serial.begin(115200);
-  //pinMode(readPin, INPUT);     // Initialize the LED_BUILTIN pin as an output
+  
   delay(10);
   
   Serial.println();
@@ -44,23 +50,20 @@ void setup() {
   wsconnect();
 }
 void loop() {
-  if (client.connected()) {
-    currentMillis = millis(); 
-    webSocketClient.getData(data);
-      
-      if (data.length() > 0) {
-        if (abs((int)currentMillis - (int)previousMillis) >= interval) {
-          previousMillis = currentMillis;
-          data= (String) analogRead(A0); //read adc values, this will give random value, since no sensor is connected. 
-          Serial.println(data);
-          webSocketClient.sendData(data);//send sensor data to websocket server
-        }
-      }
-      else{
-      
-      }
-    delay(5);
+  if (client.connected()) {    
+    //webSocketClient.getData(data);
+    
+    temp = dht.readTemperature();
+    humd = dht.readHumidity();
+          
+    data= (String)temp + "," + (String)humd;
+          
+    Serial.println("Tempreture: " + (String)temp + " Humidity: " + (String)humd);
+    webSocketClient.sendData(data);//send sensor data to websocket server
+    
+    delay(30000);
   }
+  //do else here and call wsconnect
 }
 
 void wsconnect(){
