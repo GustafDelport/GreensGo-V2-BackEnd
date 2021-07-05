@@ -45,7 +45,6 @@ s.on('connection', function (ws, req) {
             //Mois = rawData[2];
 
             //Send to mongoDB
-            //
         s.clients.forEach(function (client) {
 
             if (client != ws && client.readyState) {
@@ -58,6 +57,7 @@ s.on('connection', function (ws, req) {
     ws.on('close', function () {
         console.log("lost one client");
     });
+
     console.log("new client connected");
 });
 
