@@ -1,7 +1,16 @@
+require('dotenv').config();
+
 var bodyParser = require("body-parser");
 const express = require('express');
 
+//Mongo stuff
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+const uri = process.env.DATABASE_URL;
+
+
 const app = express();
+
 
 var http = require('http');
 var path = require("path");
@@ -42,6 +51,23 @@ s.on('connection', function (ws, req) {
 
             console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ mois +"\n");
             //Send to mongoDB
+
+            //Time instance
+            let time = new Date(Date.now()).toLocaleString();
+
+            MongoClient.connect(uri, function(err,client) {
+                assert.equal(null,err);
+                const db = client.db("Main");
+
+                db.collection('Data').insertOne({
+                    //JSON obj
+                    Time: time,
+                    Temperature: temp,
+                    HumidityPercentage: humi,
+                    MoisturePercentage: mois
+                })
+                client.close();
+            })
     });
 
     ws.on('close', function () {
