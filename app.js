@@ -1,7 +1,16 @@
+require('dotenv').config();
+
 var bodyParser = require("body-parser");
 const express = require('express');
 
+//Mongo stuff
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+const uri = process.env.DATABASE_URL;
+
+
 const app = express();
+
 
 var http = require('http');
 var path = require("path");
@@ -27,11 +36,6 @@ const s = new WebSocket.Server({
 
 //viewed at http://localhost:3000
 
-//Remove for now
-// app.get('/', function (req, res) {
-//     res.sendFile(path.join(__dirname + '/index.html'));
-// });
-
 s.on('connection', function (ws, req) {
 
 /******* when server receives messsage from client trigger function with argument message *****/
@@ -48,14 +52,22 @@ s.on('connection', function (ws, req) {
             console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ mois +"\n");
             //Send to mongoDB
 
-        //Remove for now
-        // s.clients.forEach(function (client) {
+            //Time instance
+            let time = new Date(Date.now()).toLocaleString();
 
-        //     if (client != ws && client.readyState) {
-        //         client.send("broadcast: " + message);
-        //     }
-            
-        // });
+            MongoClient.connect(uri, function(err,client) {
+                assert.equal(null,err);
+                const db = client.db("Main");
+
+                db.collection('Data').insertOne({
+                    //JSON obj
+                    Time: time,
+                    Temperature: temp,
+                    HumidityPercentage: humi,
+                    MoisturePercentage: mois
+                })
+                client.close();
+            })
     });
 
     ws.on('close', function () {
