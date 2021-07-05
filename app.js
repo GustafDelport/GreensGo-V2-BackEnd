@@ -27,11 +27,6 @@ const s = new WebSocket.Server({
 
 //viewed at http://localhost:3000
 
-//Remove for now
-// app.get('/', function (req, res) {
-//     res.sendFile(path.join(__dirname + '/index.html'));
-// });
-
 s.on('connection', function (ws, req) {
 
 /******* when server receives messsage from client trigger function with argument message *****/
@@ -47,15 +42,6 @@ s.on('connection', function (ws, req) {
 
             console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ mois +"\n");
             //Send to mongoDB
-
-        //Remove for now
-        // s.clients.forEach(function (client) {
-
-        //     if (client != ws && client.readyState) {
-        //         client.send("broadcast: " + message);
-        //     }
-            
-        // });
     });
 
     ws.on('close', function () {
