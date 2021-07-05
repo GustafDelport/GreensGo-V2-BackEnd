@@ -1,13 +1,15 @@
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
+#include<ArduinoJson.h>
+#include<SoftwareSerial.h>
 #include <WebSocketClient.h>
 #include <ESP8266WiFi.h>
+//--------------------------------------------
 
-boolean handshakeFailed=0;
-
-String data= "";
+//Variables
+String passData;
 float temp;
-float humd;
+float humi;
+float mois;
+boolean handshakeFailed=0;
 
 char path[] = "/NodeOne";
 const char* ssid     = "Delport-WiFi 2.4GHz";
@@ -15,21 +17,21 @@ const char* password = "Adp!001G";
 
 char* host = "192.168.1.102";
 const int espport= 3000;
-  
+
+//--------------------------------------------
+
+//Instances
 WebSocketClient webSocketClient;
-
-#define DHTTYPE DHT11
-uint8_t DHTPin = D2;
-
-
-DHT dht(DHTPin,DHTTYPE);
-
+SoftwareSerial node(D2, D1); //SRX=Dpin-D2; STX-DPin-D1
 WiFiClient client;
 
-void setup() {
-  Serial.begin(115200);
-  
-  delay(10);
+//--------------------------------------------
+//Code
+
+void setup()
+{
+  Serial.begin(9600); //enable Serial Monitor
+  node.begin(9600); //enable Node Port
   
   Serial.println();
   Serial.println();
@@ -50,22 +52,45 @@ void setup() {
   delay(1000);
   
   wsconnect();
+  
+  while(!Serial) continue;
 }
-void loop() {
+  
+void loop()
+{
+  //Recieving data from Arduino
+  StaticJsonBuffer<1000> jsonBuffer;
+  JsonObject& data = jsonBuffer.parseObject(node);
+  
+  if (data == JsonObject::invalid())
+  {
+    jsonBuffer.clear();
+    return;
+  }
+  
+  temp = data["temp"];
+  humi = data["humi"];
+  mois = data["mois"];
+
+  //Display data in serial to test we remove this later
+  Serial.print(temp);
+  Serial.print(",");
+  Serial.print(humi);
+  Serial.print(",");
+  Serial.print(mois);
+  Serial.println();
+  
+  //--------------------------------------------
+
+  //Posting data to server
+  
   if (client.connected()) {    
     //webSocketClient.getData(data);
-    
-    temp = dht.readTemperature();
-    humd = dht.readHumidity();
           
-    data= (String)temp + "," + (String)humd;
-          
-    Serial.println("Tempreture: " + (String)temp + " Humidity: " + (String)humd);
-    webSocketClient.sendData(data);//send sensor data to websocket server
-    
-    delay(30000);
+    passData = (String)temp + "," + (String)humi + "," + (String)mois;
+    webSocketClient.sendData(passData);//send sensor data to websocket server
   }
-  //do else here and call wsconnect
+  //--------------------------------------------
 }
 
 void wsconnect(){
@@ -102,3 +127,4 @@ void wsconnect(){
     handshakeFailed=1;
   }
 }
+//--------------------------------------------
