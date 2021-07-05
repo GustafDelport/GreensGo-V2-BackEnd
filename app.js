@@ -38,11 +38,6 @@ s.on('connection', function (ws, req) {
     ws.on('message', function (message) {
 
         console.log("Received: " + message);
-        s.clients.forEach(function (client) {
-
-            if (client != ws && client.readyState) {
-                client.send("broadcast: " + message);
-            }
             //
             //let rawData = message.spilt(',');
             //Temp = rawData[0];
@@ -50,6 +45,13 @@ s.on('connection', function (ws, req) {
             //Mois = rawData[2];
 
             //Send to mongoDB
+            //
+        s.clients.forEach(function (client) {
+
+            if (client != ws && client.readyState) {
+                client.send("broadcast: " + message);
+            }
+            
         });
     });
 

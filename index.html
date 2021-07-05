@@ -16,7 +16,7 @@
     <div style="overflow:scroll; width: 800px; height: 550px; border: solid; border-radius: 9px" id="display"></div>
 
     <script>
-        var sock = new WebSocket("ws://192.168.1.102:3000"); 
+        var sock = new WebSocket("ws://192.168.1.102:3000");
         var display = document.getElementById("display")
 
         sock.onopen = function (event) {
