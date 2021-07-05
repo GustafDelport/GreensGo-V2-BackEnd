@@ -43,7 +43,13 @@ s.on('connection', function (ws, req) {
             if (client != ws && client.readyState) {
                 client.send("broadcast: " + message);
             }
+            //
+            //let rawData = message.spilt(',');
+            //Temp = rawData[0];
+            //Humi = rawData[1];
+            //Mois = rawData[2];
 
+            //Send to mongoDB
         });
     });
 
