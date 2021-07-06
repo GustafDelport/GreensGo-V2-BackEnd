@@ -12,12 +12,16 @@ SoftwareSerial node(2, 3); //RX | TX
 #define DHT11_PIN 7
 #define MOIS_PIN A0
 
+#define PRES_PIN A1
+
 //---------------------------------------------------------------------------
 
 //Variables
 float temp;
 float humi;
 float mois;
+
+int lightVal;
 //---------------------------------------------------------------------------
 
 void setup() {
@@ -53,9 +57,12 @@ void loop() {
   data["mois"] = mois;
   
   //---------------------------------------------------------------------------
+  //Light Sensor
 
+  lightVal = analogRead(PRES_PIN);
+  data["light"] = lightVal;
+  //---------------------------------------------------------------------------
   //Sending data to ESP for server transfer
-  //--------------------------------------------------------------------------
 
   data.printTo(node);
   data.printTo(Serial);

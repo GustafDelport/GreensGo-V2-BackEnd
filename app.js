@@ -48,8 +48,9 @@ s.on('connection', function (ws, req) {
             let temp = rawData[0];
             let humi = rawData[1];
             let mois = rawData[2];
+            let light = rawData[3];
 
-            console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ mois +"\n");
+            console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ mois +"\nLight: "+ light +"\n");
             //Send to mongoDB
 
             //Time instance
@@ -64,7 +65,8 @@ s.on('connection', function (ws, req) {
                     Time: time,
                     Temperature: temp,
                     HumidityPercentage: humi,
-                    MoisturePercentage: mois
+                    MoisturePercentage: mois,
+                    LightIndex: light
                 })
                 client.close();
             })
