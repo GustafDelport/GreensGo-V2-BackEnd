@@ -9,6 +9,7 @@ String passData;
 float temp;
 float humi;
 float mois;
+int lightVal;
 boolean handshakeFailed=0;
 
 char path[] = "/NodeOne";
@@ -71,6 +72,7 @@ void loop()
   temp = data["temp"];
   humi = data["humi"];
   mois = data["mois"];
+  lightVal = data["light"];
 
   //Display data in serial to test we remove this later
   Serial.print(temp);
@@ -78,6 +80,8 @@ void loop()
   Serial.print(humi);
   Serial.print(",");
   Serial.print(mois);
+  Serial.print(",");
+  Serial.print(lightVal);
   Serial.println();
   
   //--------------------------------------------
@@ -87,7 +91,7 @@ void loop()
   if (client.connected()) {    
     //webSocketClient.getData(data);
           
-    passData = (String)temp + "," + (String)humi + "," + (String)mois;
+    passData = (String)temp + "," + (String)humi + "," + (String)mois + "," + (String)lightVal;
     webSocketClient.sendData(passData);//send sensor data to websocket server
   }
   //--------------------------------------------
