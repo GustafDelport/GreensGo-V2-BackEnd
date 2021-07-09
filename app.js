@@ -58,9 +58,9 @@ s.on('connection', function (ws, req) {
 
             MongoClient.connect(uri, function(err,client) {
                 assert.equal(null,err);
-                const db = client.db("Main");
+                const db = client.db("myFirstDatabase");
 
-                db.collection('Data').insertOne({
+                db.collection('datas').insertOne({
                     //JSON obj
                     Time: time,
                     Temperature: temp,
