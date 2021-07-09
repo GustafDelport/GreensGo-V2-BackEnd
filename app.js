@@ -57,7 +57,7 @@ s.on('connection', function (ws, req) {
             // -+ 700 => Moist soil
             // -+ 780 => Extremly wet
 
-            let moisPer = ((humi*100)/780)
+            let moisPer = Math.round(((mois*100)/780))
 
             // V measuremnets from Arduino (Light Meter)
             // 0 => Dry as can be
@@ -65,7 +65,7 @@ s.on('connection', function (ws, req) {
             // -+ 300-450 => Outside Shade light
             // -+ 800-960 => Outside Sun light
 
-            let lightPer = ((light*100)/960)
+            let lightPer = Math.round(((light*100)/960))
 
 
 
