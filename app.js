@@ -50,7 +50,26 @@ s.on('connection', function (ws, req) {
             let mois = rawData[2];
             let light = rawData[3];
 
-            console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ mois +"\nLight: "+ light +"\n");
+            // Data conversion according to calibration
+            // V measuremnets from Arduino (Moisture Meter)
+            // 0 => Dry as can be
+            // -+ 350 => Dry soil
+            // -+ 700 => Moist soil
+            // -+ 780 => Extremly wet
+
+            let moisPer = Math.round(((mois*100)/780))
+
+            // V measuremnets from Arduino (Light Meter)
+            // 0 => Dry as can be
+            // -+ 50-200 => Indoor light
+            // -+ 300-450 => Outside Shade light
+            // -+ 800-960 => Outside Sun light
+
+            let lightPer = Math.round(((light*100)/960))
+
+
+
+            console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ moisPer +"\nLight: "+ lightPer +"\n");
             //Send to mongoDB
 
             //Time instance
@@ -65,8 +84,8 @@ s.on('connection', function (ws, req) {
                     Time: time,
                     Temperature: temp,
                     HumidityPercentage: humi,
-                    MoisturePercentage: mois,
-                    LightIndex: light
+                    MoisturePercentage: moisPer,
+                    LightIndex: lightPer
                 })
                 client.close();
             })
