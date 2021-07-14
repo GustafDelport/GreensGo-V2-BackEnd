@@ -4,7 +4,8 @@
   "description": "A working server and API with a NodeMCU 12-E",
   "main": "app.js",
   "scripts": {
-    "devTest": "nodemon app.js"
+    "devTest": "nodemon app.js",
+    "start": "node app.js"
   },
   "keywords": [
     "Arduino"
