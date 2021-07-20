@@ -17,9 +17,10 @@ const char* ssid     = "Delport-WiFi 2.4GHz";
 const char* password = "Adp!001G";
 
 //192.168.1.102:3000
+//51.195.104.141:6579
 
-char* host = "51.195.104.141";
-const int espport= 6579;
+char* host = "192.168.1.102";
+const int espport= 3000;
 
 //--------------------------------------------
 
