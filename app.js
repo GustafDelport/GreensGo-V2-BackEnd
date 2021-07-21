@@ -67,7 +67,7 @@ s.on('connection', function (ws, req) {
 
             let lightPer = Math.round(((light*100)/960))
 
-
+            //check is greater then 100% then level it to 100%
 
             console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ moisPer +"\nLight: "+ lightPer +"\n");
             //Send to mongoDB
