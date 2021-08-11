@@ -2,6 +2,7 @@ require('dotenv').config();
 
 var bodyParser = require("body-parser");
 const express = require('express');
+// const nodemailer = require('nodemailer')
 
 //Mongo stuff
 const MongoClient = require('mongodb').MongoClient;
@@ -34,7 +35,19 @@ const s = new WebSocket.Server({
     server
 });
 
-//viewed at http://localhost:3000
+//Email Part
+// const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//         user:   'greensgomail@gmail.com',
+//         pass:   process.env.PASSWORD
+//     }
+
+//     //Fix this to be invisible
+// })
+
+
+//===============================================================================================
 
 s.on('connection', function (ws, req) {
 
@@ -67,13 +80,35 @@ s.on('connection', function (ws, req) {
 
             let lightPer = Math.round(((light*100)/960))
 
+            if (lightPer > 100) {
+                lightPer = 100
+            }
 
+            if (moisPer > 100) {
+                moisPer = 100
+            }
 
-            console.log("Tempreture: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ moisPer +"\nLight: "+ lightPer +"\n");
+            console.log("Temperature: "+ temp +"\nHumidity: "+ humi +"\nMoisture: "+ moisPer +"\nLight: "+ lightPer +"\n");
             //Send to mongoDB
 
             //Time instance
             let time = new Date(Date.now()).toLocaleString();
+
+            // const mailOptions = {
+            //     from: 'greensgomail@gmail.com',
+            //     to: 'gustafdelport@gmail.com',
+            //     subject: 'Sensor Report',
+            //     text: `Time: ${time}\n\nTemperature: ${temp} Celsuis\nHumidity: ${temp}%\nMoisture: ${moisPer}%\nLight: ${lightPer}%`
+            // }
+
+            // transporter.sendMail(mailOptions,(err,info) => {
+            //     if (err) {
+            //         console.log(err);
+            //     } 
+            //     else {
+            //         console.log('Email sent: ' + info.response);
+            //     } 
+            // })
 
             MongoClient.connect(uri, function(err,client) {
                 assert.equal(null,err);
