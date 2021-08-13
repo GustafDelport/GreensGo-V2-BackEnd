@@ -75,11 +75,11 @@ void loop() {
   
   if (mois <= 450)
   {
-    digitalWrite(RELAY_PIN, HIGH)
+    digitalWrite(RELAY_PIN, HIGH);
   }
   else{
-    digitalWrite(RELAY_PIN, LOW)
+    digitalWrite(RELAY_PIN, LOW);
   }
   
-  delay(10000);
+  delay(5000);
 }
