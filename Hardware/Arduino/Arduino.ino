@@ -13,6 +13,7 @@ SoftwareSerial node(2, 3); //RX | TX
 #define MOIS_PIN A0
 
 #define PRES_PIN A1
+#define RELAY_PIN 6
 
 //---------------------------------------------------------------------------
 
@@ -28,6 +29,8 @@ void setup() {
   Serial.begin(9600);
   node.begin(9600);
   delay(1000);
+
+  pinMode (RELAY_PIN, OUTPUT);
 
   Serial.println("Program Started");
 }
@@ -69,5 +72,14 @@ void loop() {
   Serial.println();
   jsonBuffer.clear();
   //--------------------------------------------------------------------------
+  
+  if (mois <= 450)
+  {
+    digitalWrite(RELAY_PIN, HIGH)
+  }
+  else{
+    digitalWrite(RELAY_PIN, LOW)
+  }
+  
   delay(10000);
 }
