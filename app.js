@@ -2,7 +2,7 @@ require('dotenv').config();
 
 var bodyParser = require("body-parser");
 const express = require('express');
-// const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer')
 
 //Mongo stuff
 const MongoClient = require('mongodb').MongoClient;
@@ -36,15 +36,15 @@ const s = new WebSocket.Server({
 });
 
 //Email Part
-// const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//         user:   'greensgomail@gmail.com',
-//         pass:   process.env.PASSWORD
-//     }
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user:   'greensgomail@gmail.com',
+        pass:   process.env.PASSWORD
+    }
 
-//     //Fix this to be invisible
-// })
+    //Fix this to be invisible
+})
 
 
 //===============================================================================================
@@ -92,23 +92,33 @@ s.on('connection', function (ws, req) {
             //Send to mongoDB
 
             //Time instance
-            let time = new Date(Date.now()).toLocaleString();
+            let time = new Date(Date.now()).toLocaleString('en-ZA', { timeZone: 'Africa/Harare' });
 
-            // const mailOptions = {
-            //     from: 'greensgomail@gmail.com',
-            //     to: 'gustafdelport@gmail.com',
-            //     subject: 'Sensor Report',
-            //     text: `Time: ${time}\n\nTemperature: ${temp} Celsuis\nHumidity: ${temp}%\nMoisture: ${moisPer}%\nLight: ${lightPer}%`
-            // }
+            var ticker = new Date(Date.now())
+            let _time = ticker.getHours() + ":" + ticker.getMinutes() + ":" + ticker.getSeconds();
+            
+            console.log(_time);
 
-            // transporter.sendMail(mailOptions,(err,info) => {
-            //     if (err) {
-            //         console.log(err);
-            //     } 
-            //     else {
-            //         console.log('Email sent: ' + info.response);
-            //     } 
-            // })
+            // condition == 6pm fix date part to only check for 6 pm
+            if (_time == '18:00:00') {
+
+                const mailOptions = {
+                    from: 'greensgomail@gmail.com',
+                    to: 'gustafdelport@gmail.com',
+                    subject: 'Sensor Report',
+                    text: `Time: ${time}\n\nTemperature: ${temp} Celsuis\nHumidity: ${temp}%\nMoisture: ${moisPer}%\nLight: ${lightPer}%`
+                }
+    
+                transporter.sendMail(mailOptions,(err,info) => {
+                    if (err) {
+                        console.log(err);
+                    } 
+                    else {
+                        console.log('Email sent: ' + info.response);
+                    } 
+                })
+            }
+            
 
             MongoClient.connect(uri, function(err,client) {
                 assert.equal(null,err);
