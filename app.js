@@ -96,8 +96,6 @@ s.on('connection', function (ws, req) {
 
             var ticker = new Date(Date.now())
             let _time = ticker.getHours() + ":" + ticker.getMinutes() + ":" + ticker.getSeconds();
-            
-            console.log(_time);
 
             // condition == 6pm fix date part to only check for 6 pm
             if (_time == '18:00:00') {
