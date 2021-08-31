@@ -80,6 +80,7 @@ void loop() {
   else{
     digitalWrite(RELAY_PIN, LOW);
   }
-  
-  delay(5000);
+
+  //600000
+  delay(600000);
 }
